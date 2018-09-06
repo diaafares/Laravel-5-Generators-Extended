@@ -16,8 +16,9 @@ class SyntaxBuilder
     /**
      * Create the PHP syntax for the given schema.
      *
-     * @param  array $schema
-     * @param  array $meta
+     * @param array $schema
+     * @param array $meta
+     *
      * @return string
      */
     public function create($schema, $meta)
@@ -31,10 +32,12 @@ class SyntaxBuilder
     /**
      * Create the schema for the "up" method.
      *
-     * @param  string $schema
-     * @param  array $meta
-     * @return string
+     * @param string $schema
+     * @param array  $meta
+     *
      * @throws GeneratorException
+     *
+     * @return string
      */
     private function createSchemaForUpMethod($schema, $meta)
     {
@@ -55,16 +58,18 @@ class SyntaxBuilder
         }
 
         // Otherwise, we have no idea how to proceed.
-        throw new GeneratorException;
+        throw new GeneratorException();
     }
 
     /**
      * Construct the syntax for a down field.
      *
-     * @param  array $schema
-     * @param  array $meta
-     * @return string
+     * @param array $schema
+     * @param array $meta
+     *
      * @throws GeneratorException
+     *
+     * @return string
      */
     private function createSchemaForDownMethod($schema, $meta)
     {
@@ -91,13 +96,14 @@ class SyntaxBuilder
         }
 
         // Otherwise, we have no idea how to proceed.
-        throw new GeneratorException;
+        throw new GeneratorException();
     }
 
     /**
      * Store the given template, to be inserted somewhere.
      *
-     * @param  string $template
+     * @param string $template
+     *
      * @return $this
      */
     private function insert($template)
@@ -110,13 +116,14 @@ class SyntaxBuilder
     /**
      * Get the stored template, and insert into the given wrapper.
      *
-     * @param  string $wrapper
-     * @param  string $placeholder
+     * @param string $wrapper
+     * @param string $placeholder
+     *
      * @return mixed
      */
     private function into($wrapper, $placeholder = 'schema_up')
     {
-        return str_replace('{{' . $placeholder . '}}', $this->template, $wrapper);
+        return str_replace('{{'.$placeholder.'}}', $this->template, $wrapper);
     }
 
     /**
@@ -126,7 +133,7 @@ class SyntaxBuilder
      */
     private function getCreateSchemaWrapper()
     {
-        return file_get_contents(__DIR__ . '/../stubs/schema-create.stub');
+        return file_get_contents(__DIR__.'/../stubs/schema-create.stub');
     }
 
     /**
@@ -136,19 +143,22 @@ class SyntaxBuilder
      */
     private function getChangeSchemaWrapper()
     {
-        return file_get_contents(__DIR__ . '/../stubs/schema-change.stub');
+        return file_get_contents(__DIR__.'/../stubs/schema-change.stub');
     }
 
     /**
      * Construct the schema fields.
      *
-     * @param  array $schema
-     * @param  string $direction
+     * @param array  $schema
+     * @param string $direction
+     *
      * @return array
      */
     private function constructSchema($schema, $direction = 'Add')
     {
-        if (!$schema) return '';
+        if (!$schema) {
+            return '';
+        }
 
         $fields = array_map(function ($field) use ($direction) {
             $method = "{$direction}Column";
@@ -156,14 +166,14 @@ class SyntaxBuilder
             return $this->$method($field);
         }, $schema);
 
-        return implode("\n" . str_repeat(' ', 12), $fields);
+        return implode("\n".str_repeat(' ', 12), $fields);
     }
-
 
     /**
      * Construct the syntax to add a column.
      *
-     * @param  string $field
+     * @param string $field
+     *
      * @return string
      */
     private function addColumn($field)
@@ -173,13 +183,13 @@ class SyntaxBuilder
         // If there are arguments for the schema type, like decimal('amount', 5, 2)
         // then we have to remember to work those in.
         if ($field['arguments']) {
-            $syntax = substr($syntax, 0, -1) . ', ';
+            $syntax = substr($syntax, 0, -1).', ';
 
-            $syntax .= implode(', ', $field['arguments']) . ')';
+            $syntax .= implode(', ', $field['arguments']).')';
         }
 
         foreach ($field['options'] as $method => $value) {
-            $syntax .= sprintf("->%s(%s)", $method, $value === true ? '' : $value);
+            $syntax .= sprintf('->%s(%s)', $method, $value === true ? '' : $value);
         }
 
         return $syntax .= ';';
@@ -188,7 +198,8 @@ class SyntaxBuilder
     /**
      * Construct the syntax to drop a column.
      *
-     * @param  string $field
+     * @param string $field
+     *
      * @return string
      */
     private function dropColumn($field)
