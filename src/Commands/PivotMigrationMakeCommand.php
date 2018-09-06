@@ -4,7 +4,6 @@ namespace Laracasts\Generators\Commands;
 
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
 class PivotMigrationMakeCommand extends GeneratorCommand
 {
@@ -41,7 +40,8 @@ class PivotMigrationMakeCommand extends GeneratorCommand
     /**
      * Parse the name and format.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function parseName($name)
@@ -59,25 +59,27 @@ class PivotMigrationMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/../stubs/pivot.stub';
+        return __DIR__.'/../stubs/pivot.stub';
     }
 
     /**
      * Get the destination class path.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getPath($name = null)
     {
-        return base_path() . '/database/migrations/' . date('Y_m_d_His') .
-        '_create_' . $this->getPivotTableName() . '_pivot_table.php';
+        return base_path().'/database/migrations/'.date('Y_m_d_His').
+        '_create_'.$this->getPivotTableName().'_pivot_table.php';
     }
 
     /**
      * Build the class with the given name.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function buildClass($name = null)
@@ -92,7 +94,8 @@ class PivotMigrationMakeCommand extends GeneratorCommand
     /**
      * Apply the name of the pivot table to the stub.
      *
-     * @param  string $stub
+     * @param string $stub
+     *
      * @return $this
      */
     protected function replacePivotTableName(&$stub)
@@ -105,7 +108,8 @@ class PivotMigrationMakeCommand extends GeneratorCommand
     /**
      * Apply the correct schema to the stub.
      *
-     * @param  string $stub
+     * @param string $stub
+     *
      * @return $this
      */
     protected function replaceSchema(&$stub)
@@ -120,12 +124,13 @@ class PivotMigrationMakeCommand extends GeneratorCommand
 
         return $this;
     }
-    
+
     /**
      * Replace the class name for the given stub.
      *
-     * @param  string  $stub
-     * @param  string  $name
+     * @param string $stub
+     * @param string $name
+     *
      * @return string
      */
     protected function replaceClass($stub, $name)
@@ -154,7 +159,7 @@ class PivotMigrationMakeCommand extends GeneratorCommand
     {
         $tables = [
             strtolower($this->argument('tableOne')),
-            strtolower($this->argument('tableTwo'))
+            strtolower($this->argument('tableTwo')),
         ];
 
         sort($tables);
@@ -171,7 +176,7 @@ class PivotMigrationMakeCommand extends GeneratorCommand
     {
         return [
             ['tableOne', InputArgument::REQUIRED, 'The name of the first table.'],
-            ['tableTwo', InputArgument::REQUIRED, 'The name of the second table.']
+            ['tableTwo', InputArgument::REQUIRED, 'The name of the second table.'],
         ];
     }
 }
