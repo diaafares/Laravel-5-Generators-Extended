@@ -8,8 +8,8 @@ use Illuminate\Filesystem\Filesystem;
 use Laracasts\Generators\Migrations\NameParser;
 use Laracasts\Generators\Migrations\SchemaParser;
 use Laracasts\Generators\Migrations\SyntaxBuilder;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class MigrationMakeCommand extends Command
 {
@@ -50,7 +50,7 @@ class MigrationMakeCommand extends Command
      * Create a new command instance.
      *
      * @param Filesystem $files
-     * @param Composer $composer
+     * @param Composer   $composer
      */
     public function __construct(Filesystem $files)
     {
@@ -67,7 +67,7 @@ class MigrationMakeCommand extends Command
      */
     public function fire()
     {
-        $this->meta = (new NameParser)->parse($this->argument('name'));
+        $this->meta = (new NameParser())->parse($this->argument('name'));
 
         $this->makeMigration();
         $this->makeModel();
@@ -91,7 +91,7 @@ class MigrationMakeCommand extends Command
         $name = $this->argument('name');
 
         if ($this->files->exists($path = $this->getPath($name))) {
-            return $this->error($this->type . ' already exists!');
+            return $this->error($this->type.' already exists!');
         }
 
         $this->makeDirectory($path);
@@ -112,7 +112,7 @@ class MigrationMakeCommand extends Command
 
         if ($this->option('model') && !$this->files->exists($modelPath)) {
             $this->call('make:model', [
-                'name' => $this->getModelName()
+                'name' => $this->getModelName(),
             ]);
         }
     }
@@ -120,7 +120,8 @@ class MigrationMakeCommand extends Command
     /**
      * Build the directory for the class if necessary.
      *
-     * @param  string $path
+     * @param string $path
+     *
      * @return string
      */
     protected function makeDirectory($path)
@@ -133,25 +134,27 @@ class MigrationMakeCommand extends Command
     /**
      * Get the path to where we should store the migration.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getPath($name)
     {
-        return base_path() . '/database/migrations/' . date('Y_m_d_His') . '_' . $name . '.php';
+        return base_path().'/database/migrations/'.date('Y_m_d_His').'_'.$name.'.php';
     }
 
     /**
      * Get the destination class path.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getModelPath($name)
     {
         $name = str_replace($this->getAppNamespace(), '', $name);
 
-        return $this->laravel['path'] . '/' . str_replace('\\', '/', $name) . '.php';
+        return $this->laravel['path'].'/'.str_replace('\\', '/', $name).'.php';
     }
 
     /**
@@ -161,7 +164,7 @@ class MigrationMakeCommand extends Command
      */
     protected function compileMigrationStub()
     {
-        $stub = $this->files->get(__DIR__ . '/../stubs/migration.stub');
+        $stub = $this->files->get(__DIR__.'/../stubs/migration.stub');
 
         $this->replaceClassName($stub)
             ->replaceSchema($stub)
@@ -173,7 +176,8 @@ class MigrationMakeCommand extends Command
     /**
      * Replace the class name in the stub.
      *
-     * @param  string $stub
+     * @param string $stub
+     *
      * @return $this
      */
     protected function replaceClassName(&$stub)
@@ -188,7 +192,8 @@ class MigrationMakeCommand extends Command
     /**
      * Replace the table name in the stub.
      *
-     * @param  string $stub
+     * @param string $stub
+     *
      * @return $this
      */
     protected function replaceTableName(&$stub)
@@ -203,16 +208,17 @@ class MigrationMakeCommand extends Command
     /**
      * Replace the schema for the stub.
      *
-     * @param  string $stub
+     * @param string $stub
+     *
      * @return $this
      */
     protected function replaceSchema(&$stub)
     {
         if ($schema = $this->option('schema')) {
-            $schema = (new SchemaParser)->parse($schema);
+            $schema = (new SchemaParser())->parse($schema);
         }
 
-        $schema = (new SyntaxBuilder)->create($schema, $this->meta);
+        $schema = (new SyntaxBuilder())->create($schema, $this->meta);
 
         $stub = str_replace(['{{schema_up}}', '{{schema_down}}'], $schema, $stub);
 

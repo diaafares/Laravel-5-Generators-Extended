@@ -3,7 +3,6 @@
 namespace Laracasts\Generators\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use Symfony\Component\Console\Input\InputOption;
 
 class SeedMakeCommand extends GeneratorCommand
 {
@@ -31,12 +30,13 @@ class SeedMakeCommand extends GeneratorCommand
     /**
      * Parse the name and format according to the root namespace.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function parseName($name)
     {
-        return ucwords(camel_case($name)) . 'TableSeeder';
+        return ucwords(camel_case($name)).'TableSeeder';
     }
 
     /**
@@ -46,13 +46,14 @@ class SeedMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/../stubs/seed.stub';
+        return __DIR__.'/../stubs/seed.stub';
     }
 
     /**
      * Build the class with the given name.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function buildClass($name = null)
@@ -65,8 +66,9 @@ class SeedMakeCommand extends GeneratorCommand
     /**
      * Replace the class name for the given stub.
      *
-     * @param  string  $stub
-     * @param  string  $name
+     * @param string $stub
+     * @param string $name
+     *
      * @return string
      */
     protected function replaceClass($stub, $name)
@@ -79,11 +81,12 @@ class SeedMakeCommand extends GeneratorCommand
     /**
      * Get the destination class path.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getPath($name)
     {
-        return base_path() . '/database/seeds/' . str_replace('\\', '/', $name) . '.php';
+        return base_path().'/database/seeds/'.str_replace('\\', '/', $name).'.php';
     }
 }
