@@ -57,8 +57,12 @@ class GeneratorsServiceProvider extends ServiceProvider
      */
     private function registerPivotMigrationGenerator()
     {
-        $this->app->singleton('command.laracasts.migrate.pivot', function ($app) {
-            return $app['Laracasts\Generators\Commands\PivotMigrationMakeCommand'];
+        $this->app->singleton('command.laracasts.migrate.pivot', function (
+            $app
+        ) {
+            return $app[
+                'Laracasts\Generators\Commands\PivotMigrationMakeCommand'
+            ];
         });
 
         $this->commands('command.laracasts.migrate.pivot');

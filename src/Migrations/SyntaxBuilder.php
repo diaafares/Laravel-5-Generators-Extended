@@ -41,21 +41,27 @@ class SyntaxBuilder
         $fields = $this->constructSchema($schema);
 
         if ($meta['action'] == 'create') {
-            return $this->insert($fields)->into($this->getCreateSchemaWrapper());
+            return $this->insert($fields)->into(
+                $this->getCreateSchemaWrapper()
+            );
         }
 
         if ($meta['action'] == 'add') {
-            return $this->insert($fields)->into($this->getChangeSchemaWrapper());
+            return $this->insert($fields)->into(
+                $this->getChangeSchemaWrapper()
+            );
         }
 
         if ($meta['action'] == 'remove') {
             $fields = $this->constructSchema($schema, 'Drop');
 
-            return $this->insert($fields)->into($this->getChangeSchemaWrapper());
+            return $this->insert($fields)->into(
+                $this->getChangeSchemaWrapper()
+            );
         }
 
         // Otherwise, we have no idea how to proceed.
-        throw new GeneratorException;
+        throw new GeneratorException();
     }
 
     /**
@@ -79,7 +85,9 @@ class SyntaxBuilder
         if ($meta['action'] == 'add') {
             $fields = $this->constructSchema($schema, 'Drop');
 
-            return $this->insert($fields)->into($this->getChangeSchemaWrapper());
+            return $this->insert($fields)->into(
+                $this->getChangeSchemaWrapper()
+            );
         }
 
         // If the user removed columns from a table, then for
@@ -87,11 +95,13 @@ class SyntaxBuilder
         if ($meta['action'] == 'remove') {
             $fields = $this->constructSchema($schema);
 
-            return $this->insert($fields)->into($this->getChangeSchemaWrapper());
+            return $this->insert($fields)->into(
+                $this->getChangeSchemaWrapper()
+            );
         }
 
         // Otherwise, we have no idea how to proceed.
-        throw new GeneratorException;
+        throw new GeneratorException();
     }
 
     /**
@@ -116,7 +126,11 @@ class SyntaxBuilder
      */
     private function into($wrapper, $placeholder = 'schema_up')
     {
-        return str_replace('{{' . $placeholder . '}}', $this->template, $wrapper);
+        return str_replace(
+            '{{' . $placeholder . '}}',
+            $this->template,
+            $wrapper
+        );
     }
 
     /**
@@ -148,7 +162,9 @@ class SyntaxBuilder
      */
     private function constructSchema($schema, $direction = 'Add')
     {
-        if (!$schema) return '';
+        if (!$schema) {
+            return '';
+        }
 
         $fields = array_map(function ($field) use ($direction) {
             $method = "{$direction}Column";
@@ -158,7 +174,6 @@ class SyntaxBuilder
 
         return implode("\n" . str_repeat(' ', 12), $fields);
     }
-
 
     /**
      * Construct the syntax to add a column.
@@ -179,7 +194,11 @@ class SyntaxBuilder
         }
 
         foreach ($field['options'] as $method => $value) {
-            $syntax .= sprintf("->%s(%s)", $method, $value === true ? '' : $value);
+            $syntax .= sprintf(
+                "->%s(%s)",
+                $method,
+                $value === true ? '' : $value
+            );
         }
 
         return $syntax .= ';';

@@ -67,7 +67,7 @@ class MigrationMakeCommand extends Command
      */
     public function fire()
     {
-        $this->meta = (new NameParser)->parse($this->argument('name'));
+        $this->meta = (new NameParser())->parse($this->argument('name'));
 
         $this->makeMigration();
         $this->makeModel();
@@ -90,7 +90,7 @@ class MigrationMakeCommand extends Command
     {
         $name = $this->argument('name');
 
-        if ($this->files->exists($path = $this->getPath($name))) {
+        if ($this->files->exists(($path = $this->getPath($name)))) {
             return $this->error($this->type . ' already exists!');
         }
 
@@ -138,7 +138,12 @@ class MigrationMakeCommand extends Command
      */
     protected function getPath($name)
     {
-        return base_path() . '/database/migrations/' . date('Y_m_d_His') . '_' . $name . '.php';
+        return base_path() .
+            '/database/migrations/' .
+            date('Y_m_d_His') .
+            '_' .
+            $name .
+            '.php';
     }
 
     /**
@@ -151,7 +156,10 @@ class MigrationMakeCommand extends Command
     {
         $name = str_replace($this->getAppNamespace(), '', $name);
 
-        return $this->laravel['path'] . '/' . str_replace('\\', '/', $name) . '.php';
+        return $this->laravel['path'] .
+            '/' .
+            str_replace('\\', '/', $name) .
+            '.php';
     }
 
     /**
@@ -209,12 +217,16 @@ class MigrationMakeCommand extends Command
     protected function replaceSchema(&$stub)
     {
         if ($schema = $this->option('schema')) {
-            $schema = (new SchemaParser)->parse($schema);
+            $schema = (new SchemaParser())->parse($schema);
         }
 
-        $schema = (new SyntaxBuilder)->create($schema, $this->meta);
+        $schema = (new SyntaxBuilder())->create($schema, $this->meta);
 
-        $stub = str_replace(['{{schema_up}}', '{{schema_down}}'], $schema, $stub);
+        $stub = str_replace(
+            ['{{schema_up}}', '{{schema_down}}'],
+            $schema,
+            $stub
+        );
 
         return $this;
     }
@@ -236,9 +248,7 @@ class MigrationMakeCommand extends Command
      */
     protected function getArguments()
     {
-        return [
-            ['name', InputArgument::REQUIRED, 'The name of the migration'],
-        ];
+        return [['name', InputArgument::REQUIRED, 'The name of the migration']];
     }
 
     /**
@@ -249,8 +259,20 @@ class MigrationMakeCommand extends Command
     protected function getOptions()
     {
         return [
-            ['schema', 's', InputOption::VALUE_OPTIONAL, 'Optional schema to be attached to the migration', null],
-            ['model', null, InputOption::VALUE_OPTIONAL, 'Want a model for this table?', true],
+            [
+                'schema',
+                's',
+                InputOption::VALUE_OPTIONAL,
+                'Optional schema to be attached to the migration',
+                null
+            ],
+            [
+                'model',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Want a model for this table?',
+                true
+            ]
         ];
     }
 }

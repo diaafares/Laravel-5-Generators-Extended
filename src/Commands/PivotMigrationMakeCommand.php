@@ -70,8 +70,12 @@ class PivotMigrationMakeCommand extends GeneratorCommand
      */
     protected function getPath($name = null)
     {
-        return base_path() . '/database/migrations/' . date('Y_m_d_His') .
-        '_create_' . $this->getPivotTableName() . '_pivot_table.php';
+        return base_path() .
+            '/database/migrations/' .
+            date('Y_m_d_His') .
+            '_create_' .
+            $this->getPivotTableName() .
+            '_pivot_table.php';
     }
 
     /**
@@ -97,7 +101,11 @@ class PivotMigrationMakeCommand extends GeneratorCommand
      */
     protected function replacePivotTableName(&$stub)
     {
-        $stub = str_replace('{{pivotTableName}}', $this->getPivotTableName(), $stub);
+        $stub = str_replace(
+            '{{pivotTableName}}',
+            $this->getPivotTableName(),
+            $stub
+        );
 
         return $this;
     }
@@ -120,7 +128,7 @@ class PivotMigrationMakeCommand extends GeneratorCommand
 
         return $this;
     }
-    
+
     /**
      * Replace the class name for the given stub.
      *
@@ -142,7 +150,10 @@ class PivotMigrationMakeCommand extends GeneratorCommand
      */
     protected function getPivotTableName()
     {
-        return implode('_', array_map('str_singular', $this->getSortedTableNames()));
+        return implode(
+            '_',
+            array_map('str_singular', $this->getSortedTableNames())
+        );
     }
 
     /**
@@ -170,8 +181,16 @@ class PivotMigrationMakeCommand extends GeneratorCommand
     protected function getArguments()
     {
         return [
-            ['tableOne', InputArgument::REQUIRED, 'The name of the first table.'],
-            ['tableTwo', InputArgument::REQUIRED, 'The name of the second table.']
+            [
+                'tableOne',
+                InputArgument::REQUIRED,
+                'The name of the first table.'
+            ],
+            [
+                'tableTwo',
+                InputArgument::REQUIRED,
+                'The name of the second table.'
+            ]
         ];
     }
 }

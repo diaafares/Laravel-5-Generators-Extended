@@ -101,7 +101,9 @@ class SchemaParser
      */
     private function parseOptions($options)
     {
-        if (empty($options)) return [];
+        if (empty($options)) {
+            return [];
+        }
 
         foreach ($options as $option) {
             if (str_contains($option, '(')) {
@@ -155,4 +157,3 @@ class SchemaParser
         return array_key_exists('foreign', $segments['options']);
     }
 }
-
